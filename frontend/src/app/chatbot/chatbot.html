@@ -1,0 +1,112 @@
+
+<button
+  class="chat-toggle"
+  type="button"
+  (click)="toggleChat()"
+  aria-controls="chat-window"
+  [attr.aria-expanded]="isOpen"
+  [attr.aria-label]="isOpen ? 'Close chatbot' : 'Open chatbot'">
+  {{ isOpen ? '×' : '✦' }}
+</button>
+
+<section
+  id="chat-window"
+  class="chat-window"
+  aria-label="CourseCompass AI chat"
+  *ngIf="isOpen">
+
+  <header class="chat-header">
+    <div class="bot-icon">✦</div>
+
+    <div class="header-info">
+      <h2>CourseCompass AI</h2>
+      <p>
+        <span class="online-dot"></span>
+        Course recommendation assistant
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="close-button"
+      (click)="isOpen = false"
+      aria-label="Close chat">
+      ×
+    </button>
+  </header>
+
+  <div class="welcome-area">
+    <p>Not sure which course to choose?</p>
+
+    <button
+      type="button"
+      [disabled]="loading"
+      aria-label="Ask about course options after completing BSc Computer Science"
+      (click)="question = 'I completed BSc Computer Science. Which course is suitable for me?'; sendMessage()">
+      I completed BSc Computer Science
+    </button>
+
+    <button
+      type="button"
+      [disabled]="loading"
+      aria-label="Ask about becoming an AI engineer"
+      (click)="question = 'I want to become an AI engineer. Which course should I choose?'; sendMessage()">
+      I want to become an AI engineer
+    </button>
+  </div>
+
+  <div class="messages" #messageContainer role="log" aria-live="polite" aria-relevant="additions">
+    @for (message of messages; track message) {
+      <div
+        class="message-row"
+        [class.user-row]="message.role === 'user'">
+
+        <div
+          class="message"
+          [class.user-message]="message.role === 'user'">
+
+          <span class="sender">
+            {{ message.role === 'user' ? 'You' : 'CourseCompass AI' }}
+          </span>
+
+          <p>{{ message.text }}</p>
+        </div>
+      </div>
+    }
+
+    <div
+      class="message-row"
+      *ngIf="loading">
+
+      <div class="message">
+        <span class="sender">CourseCompass AI</span>
+        <p>Thinking... Please wait.</p>
+      </div>
+    </div>
+  </div>
+
+  <form
+    class="chat-form"
+    (ngSubmit)="sendMessage()">
+
+    <input
+      type="text"
+      name="question"
+      [(ngModel)]="question"
+      placeholder="Ask about courses..."
+      aria-label="Ask CourseCompass AI about courses"
+      autocomplete="off"
+      [disabled]="loading">
+
+    <button
+      type="submit"
+      [disabled]="loading || !question.trim()"
+      aria-label="Send message">
+      ➤
+    </button>
+  </form>
+
+  <p class="chat-note">
+    AI recommendations are for guidance. Verify official course details.
+  </p>
+</section>

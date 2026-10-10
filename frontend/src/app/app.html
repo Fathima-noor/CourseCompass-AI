@@ -1,0 +1,362 @@
+<div class="site-wrapper">
+  <!-- NAVBAR -->  
+  <header class="navbar">
+    <a href="#home" class="brand">
+      <span class="brand-icon">✳</span>
+      <span>CourseCompass<span class="brand-ai"> AI</span></span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#courses">Discover</a>
+      <a href="#how-it-works">How it works</a>
+    </nav>
+
+    <button class="nav-cta" type="button" (click)="openAssistant()" aria-label="Open CourseCompass AI chat">
+      Ask your AI <span>↗</span>
+    </button>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hero-left">
+        <div class="eyebrow">
+          <span class="live-dot"></span>
+          YOUR NEXT CHAPTER STARTS HERE
+        </div>
+
+        <h1>
+          Your future<br>
+          is <span>not one-size-</span><br>
+          <span>fits-all.</span>
+        </h1>
+
+        <p class="hero-description">
+          There are so many paths to choose from. Let's find the
+          one that fits your interests, strengths and ambitions.
+          Your next step starts with a conversation.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#courses" class="primary-button">
+            Find your direction <span>↗</span>
+          </a>
+
+          <button class="secondary-button" type="button"
+                  (click)="openAssistant()"
+                  aria-label="Open CourseCompass AI chat">
+            <span class="button-sparkle">✳</span>
+            Talk to AI
+          </button>
+        </div>
+
+        <div class="hero-note">
+          <span class="note-icon">✦</span>
+          <span>Less confusion. More clarity.</span>
+        </div>
+      </div>
+
+      <!-- CREATIVE HERO ART -->
+      <div class="hero-right">
+        <div class="hero-art">
+          <div class="art-topline">
+            <span>THE POSSIBILITIES ARE YOURS</span>
+            <span>01 / 03</span>
+          </div>
+
+          <div class="art-orbit orbit-a"></div>
+          <div class="art-orbit orbit-b"></div>
+
+          <div class="art-center">
+            <span class="center-star">✳</span>
+            <span class="center-small">YOUR JOURNEY</span>
+            <strong>Start<br>with a<br><em>question.</em></strong>
+            <span class="center-arrow">↘</span>
+          </div>
+
+          <div class="path-card path-card-one">
+            <span class="path-icon icon-lilac">⌘</span>
+            <span><strong>Technology</strong><small>Build what's next</small></span>
+          </div>
+
+          <div class="path-card path-card-two">
+            <span class="path-icon icon-peach">✧</span>
+            <span><strong>Creative fields</strong><small>Make ideas real</small></span>
+          </div>
+
+          <div class="path-card path-card-three">
+            <span class="path-icon icon-green">↗</span>
+            <span><strong>Your future</strong><small>One step at a time</small></span>
+          </div>
+
+          <div class="art-caption">
+            <span class="caption-line"></span>
+            NO FIXED PATH. JUST POSSIBILITIES.
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-index"><span>01</span> DISCOVER YOURSELF</div>
+    </section>
+
+    <!-- INTRO STRIP -->
+    <section class="intro-strip">
+      <div class="intro-heading">
+        <span class="intro-symbol">✳</span>
+        <p>GOOD CHOICES BEGIN<br>WITH GOOD QUESTIONS.</p>
+      </div>
+
+      <div class="intro-item">
+        <span>01</span>
+        <div><strong>Explore</strong><small>Discover courses and fields</small></div>
+      </div>
+
+      <div class="intro-item">
+        <span>02</span>
+        <div><strong>Understand</strong><small>Learn what suits you</small></div>
+      </div>
+
+      <div class="intro-item">
+        <span>03</span>
+        <div><strong>Move forward</strong><small>Plan your next step</small></div>
+      </div>
+    </section>
+
+    <!-- COURSES -->
+    <section class="courses-section" id="courses">
+      <div class="section-topline">
+        <span>THE COURSE COLLECTION</span>
+        <span>EXPLORE / LEARN / GROW</span>
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <h2>A world of options.<br><span>One choice at a time.</span></h2>
+        </div>
+
+        <div class="section-intro">
+          <p>
+            Browse different learning paths, compare the basics,
+            and ask our AI guide which options may match your goals.
+          </p>
+          <button class="text-link" type="button"
+                  (click)="openAssistant()"
+                  aria-label="Open CourseCompass AI to help choose a course">
+            Help me choose <span>↗</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="course-grid"
+           *ngIf="!loadingCourses && !courseError && courses.length > 0">
+        @for (course of courses; track course.course_name; let i = $index) {
+          <article class="course-card"
+                   [class.card-lilac]="i % 4 === 0"
+                   [class.card-peach]="i % 4 === 1"
+                   [class.card-green]="i % 4 === 2"
+                   [class.card-blue]="i % 4 === 3">
+
+            <div class="course-card-top">
+              <span class="course-index">{{ course.indexLabel }}</span>
+              <span class="course-icon">{{ course.icon }}</span>
+            </div>
+
+            <div class="course-tags">
+              <span>{{ course.field }}</span>
+              <span *ngIf="course.level">{{ course.level }}</span>
+            </div>
+
+            <h3>{{ course.course_name }}</h3>
+            <p class="course-description">{{ course.description }}</p>
+
+            <div class="course-details">
+              <div>
+                <span class="detail-label">DURATION</span>
+                <strong>{{ course.duration || 'Not specified' }}</strong>
+              </div>
+              <div>
+                <span class="detail-label">SAMPLE FEES</span>
+                <strong>
+                  <ng-container *ngIf="course.fees !== '' && course.fees != null; else noFees">
+                    ₹{{ course.fees }}
+                  </ng-container>
+                  <ng-template #noFees>Not listed</ng-template>
+                </strong>
+              </div>
+            </div>
+
+            <button class="course-action"
+                    type="button"
+                    (click)="openAssistant('Tell me about ' + course.course_name + ' and whether it suits my goals.')"
+                    [attr.aria-label]="'Ask CourseCompass AI about ' + course.course_name">
+              <span>Ask AI about this course</span>
+              <span class="action-arrow">↗</span>
+            </button>
+          </article>
+        }
+      </div>
+
+      <div class="status-message" *ngIf="loadingCourses">
+        <div class="loading-spinner"></div>
+        <p>Gathering your course options...</p>
+      </div>
+
+      <div class="status-message error-message" *ngIf="courseError">
+        <p>{{ courseError }}</p>
+        <button class="primary-button" type="button" (click)="loadCourses()">
+          Try again ↻
+        </button>
+      </div>
+
+      <div class="empty-message"
+           *ngIf="!loadingCourses && !courseError && courses.length === 0">
+        No courses are available at the moment.
+      </div>
+
+      <p class="fees-note">
+        * Fees are sample dataset values, not verified official fees.
+        Please confirm fees and eligibility with the relevant institution.
+      </p>
+    </section>
+
+    <!-- AI FEATURE SECTION -->
+    <section class="ai-feature">
+      <div class="feature-left">
+        <span class="feature-kicker">A LITTLE HELP GOES A LONG WAY</span>
+        <h2>Big decisions<br>don't have to feel<br><span>so big.</span></h2>
+        <p>
+          Tell CourseCompass AI about your education, interests or
+          dream career. Get guidance to help you explore your options.
+        </p>
+        <button class="feature-button" type="button"
+                (click)="openAssistant()"
+                aria-label="Open CourseCompass AI chat">
+          Start a conversation <span>↗</span>
+        </button>
+      </div>
+
+      <div class="feature-right">
+        <div class="chat-preview">
+          <div class="chat-preview-header">
+            <span class="chat-avatar">✳</span>
+            <div><strong>CourseCompass AI</strong><small><span></span> Ready to help</small></div>
+          </div>
+
+          <div class="chat-question">I'm interested in technology. Where should I start?</div>
+
+          <div class="chat-answer">
+            <span class="answer-star">✳</span>
+            <div>
+              <strong>Let's explore your options.</strong>
+              <p>We can look at your interests, current skills and career goals to find courses worth exploring.</p>
+            </div>
+          </div>
+
+          <div class="chat-preview-bottom">
+            <span>YOUR JOURNEY STARTS WITH A QUESTION</span>
+            <span>↗</span>
+          </div>
+        </div>
+        <div class="feature-decoration">?</div>
+        <span class="feature-orbit"></span>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section" id="how-it-works">
+      <div class="how-heading">
+        <span class="section-kicker">THREE STEPS. A CLEARER DIRECTION.</span>
+        <h2>Let's make the<br><span>next step simpler.</span></h2>
+      </div>
+
+      <div class="steps-list">
+        <article class="step-row">
+          <span class="step-number">01</span>
+          <span class="step-symbol">☷</span>
+          <div class="step-copy">
+            <h3>Tell us what matters to you</h3>
+            <p>Share your educational background, interests, skills or ambitions with the AI assistant.</p>
+          </div>
+          <span class="step-arrow">↘</span>
+        </article>
+
+        <article class="step-row">
+          <span class="step-number">02</span>
+          <span class="step-symbol">✳</span>
+          <div class="step-copy">
+            <h3>Discover possible paths</h3>
+            <p>Explore AI-assisted suggestions based on information from the available course dataset.</p>
+          </div>
+          <span class="step-arrow">↘</span>
+        </article>
+
+        <article class="step-row">
+          <span class="step-number">03</span>
+          <span class="step-symbol">↗</span>
+          <div class="step-copy">
+            <h3>Make an informed choice</h3>
+            <p>Compare course details and research eligibility, fees and institutions before deciding.</p>
+          </div>
+          <span class="step-arrow">↗</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+      <div class="cta-decoration">✳</div>
+      <div>
+        <span>YOUR FUTURE IS YOURS TO SHAPE</span>
+        <h2>What will you discover next?</h2>
+        <p>Start with a question. Explore a new possibility.</p>
+      </div>
+      <button type="button" class="cta-button"
+              (click)="openAssistant()"
+              aria-label="Ask CourseCompass AI">
+        Ask CourseCompass AI <span>↗</span>
+      </button>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-main">
+      <a href="#home" class="brand">
+        <span class="brand-icon">✳</span>
+        <span>CourseCompass<span class="brand-ai"> AI</span></span>
+      </a>
+      <p>A little clarity for your next big decision.</p>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#courses">Discover courses</a>
+        <a href="#how-it-works">How it works</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CourseCompass AI</span>
+      <span>Explore possibilities. Choose with confidence.</span>
+    </div>
+  </footer>
+
+</div> 
+
+@defer (when chatbotRequested) {
+  <app-chatbot
+  #chatbot
+  [initiallyOpen]="chatbotRequested"
+    [initialQuestion]="chatbotInitialQuestion">
+  </app-chatbot>
+} @placeholder {
+  <button
+    class="chat-toggle-placeholder"
+    type="button"
+    aria-label="Open chatbot"
+    aria-controls="chat-window"
+    aria-expanded="false"
+    (click)="openAssistant()">
+    ✦
+  </button>
+}
